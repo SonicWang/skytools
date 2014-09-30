@@ -68,3 +68,7 @@
 \i functions/pgq.version.sql
 \i functions/pgq.get_batch_info.sql
 
+-- Group: Readslave related functions
+
+\i functions/pgq.batch_slave_events.sql
+\i functions/pgq.batch_slave_event_retry.sql
