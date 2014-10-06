@@ -38,17 +38,17 @@ class SlaveConsumer(Consumer):
         then it checks locally if streaming replication
         has already caught up with regard to the batch_id + tick_id.
         It yes, then proceed to read locally all the events and process them.
-        Otherwise return false and will retry the same batch later.
+        Otherwise return 0 and will retry the same batch later.
         """
         self.pgq_lazy_fetch = 0
 
         db = self.get_database(self.db_name)
-        curs = db.cursor()
+        master_curs = db.cursor()
 
         self.stat_start()
 
         # acquire batch
-        batch_id = self._load_next_batch(curs)
+        batch_id = self._load_next_batch(master_curs)
         db.commit()
         if batch_id == None:
             return 0
@@ -68,13 +68,13 @@ class SlaveConsumer(Consumer):
         self._launch_process_batch(db, batch_id, ev_list)
 
         # done, ack to master
-        self._finish_batch(curs, batch_id, ev_list)
+        self._finish_batch(master_curs, batch_id, ev_list)
         db.commit()
         self.stat_end(len(ev_list))
 
         return 1
 
-    def _flush_retry(self, curs, batch_id, list):
+    def _flush_retry(self, master_curs, batch_id, list):
         """Tag retry events."""
 
         retry = 0
@@ -102,7 +102,7 @@ class SlaveConsumer(Consumer):
 
         # report weird events
         if retry:
-            self._batch_retry(curs, batch_id, retry_list, retry_time)
+            self._batch_retry(master_curs, batch_id, retry_list, retry_time)
             self.stat_increase('retry-events', retry)
 
     def _batch_retry(self, cx, batch_id, retry_list, retry_time):
