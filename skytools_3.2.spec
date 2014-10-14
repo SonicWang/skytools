@@ -1,15 +1,16 @@
 %global pginstdir /usr/pgsql-9.2
 %global pgmajorversion 92
 %global sname   skytools
+%global _libdir /usr/lib
 
 # Python major version.
 %{expand: %%define pyver %(python -c 'import sys;print(sys.version[0:3])')}
-%{!?python_sitearch: %define python_sitearch %(%{__python} -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
+%{!?python_sitearch: %define python_sitearch %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib(1)")}
 
 Summary:  PostgreSQL database management tools from Skype
 Name:   %{sname}-%{pgmajorversion}
 Version:  3.2
-Release:  insta1%{?dist}
+Release:  insta2%{?dist}
 License:  BSD
 Group:    Applications/Databases
 Source0:  %{sname}-%{version}.tar.gz
