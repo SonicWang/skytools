@@ -107,7 +107,7 @@ class SlaveConsumer(Consumer):
 
     def _batch_retry(self, cx, batch_id, retry_list, retry_time):
         """send a batch of event ids for retry"""
-        cx.execute("select pgq.batch_slave_event_retry(%s, '%s', %s)",
+        cx.execute("select pgq.batch_slave_event_retry(%s, %s, %s)",
                    [batch_id, '{' + ",".join(str(x) for x in retry_list) + '}', retry_time])
 
     def _load_batch_events(self, curs, batch_id):
