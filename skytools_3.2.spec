@@ -10,7 +10,7 @@
 Summary:  PostgreSQL database management tools from Skype
 Name:   %{sname}-%{pgmajorversion}
 Version:  3.2
-Release:  insta2%{?dist}
+Release:  insta3%{?dist}
 License:  BSD
 Group:    Applications/Databases
 Source0:  %{sname}-%{version}.tar.gz
